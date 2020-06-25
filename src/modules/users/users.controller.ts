@@ -32,14 +32,14 @@ export class UsersController {
 
   @Post()
   @UsePipes(ValidationPipe)
-  @ApiBody({ type: [CreateUserDto] })
+  @ApiBody({ type: CreateUserDto })
   createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.userService.createUser(createUserDto)
   }
 
   @Put('/:id')
   @UsePipes(ValidationPipe)
-  @ApiBody({ type: [UpdateUserDto] })
+  @ApiBody({ type: UpdateUserDto })
   updateUser(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
