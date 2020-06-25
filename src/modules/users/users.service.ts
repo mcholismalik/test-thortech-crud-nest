@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserRepository } from './../../repository/user.repository';
-import { User } from './../../entity/user.entity';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/udpate-user.dto';
+import { Injectable, NotFoundException } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { UserRepository } from '../../repositories/user.repository'
+import { User } from '../../entities/user.entity'
+import { CreateUserDto } from './dto/create-user.dto'
+import { UpdateUserDto } from './dto/udpate-user.dto'
+import { AfterInsert } from 'typeorm'
 
 @Injectable()
 export class UsersService {
@@ -12,44 +13,43 @@ export class UsersService {
   ) {}
 
   async getUsers(): Promise<User[]> {
-    return await this.userRepository.find();
+    return await this.userRepository.find()
   }
 
   async getUserById(id: number): Promise<User> {
-    const found = await this.userRepository.findOne(id);
+    const found = await this.userRepository.findOne(id)
+    if (!found) throw new NotFoundException(`User with ID "${id}" not found`)
 
-    if (!found) throw new NotFoundException(`User with ID "${id}" not found`);
-
-    return found;
+    return found
   }
 
+  @AfterInsert()
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const { username, password, telegramUser } = createUserDto;
+    const { username, password, telegramUser } = createUserDto
 
-    const user = new User();
-    user.username = username;
-    user.password = password;
-    user.telegramUser = telegramUser;
-    await user.save();
+    const user = new User()
+    user.username = username
+    user.password = password
+    user.telegramUser = telegramUser
+    await user.save()
 
-    return user;
+    return user
   }
 
   async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    const { username, password } = updateUserDto;
+    const { username, password } = updateUserDto
 
-    const user = await this.getUserById(id);
-    if (username) user.username = username;
-    if (password) user.password = password;
-    await user.save();
+    const user = await this.getUserById(id)
+    if (username) user.username = username
+    if (password) user.password = password
+    await user.save()
 
-    return user;
+    return user
   }
 
   async deleteUser(id: number): Promise<void> {
-    const result = await this.userRepository.delete(id);
-
+    const result = await this.userRepository.delete(id)
     if (result.affected === 0)
-      throw new NotFoundException(`User with ID "${id}" not found`);
+      throw new NotFoundException(`User with ID "${id}" not found`)
   }
 }

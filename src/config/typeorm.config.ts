@@ -1,5 +1,5 @@
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { User } from 'src/entity/user.entity';
+import { TypeOrmModuleOptions } from '@nestjs/typeorm'
+import { User } from 'src/entities/user.entity'
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
   type: 'postgres',
@@ -10,4 +10,4 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   database: 'crud-api-nestjs',
   entities: [User],
   synchronize: true,
-};
+}
