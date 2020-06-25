@@ -4,7 +4,6 @@ import { UserRepository } from '../../repositories/user.repository'
 import { User } from '../../entities/user.entity'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/udpate-user.dto'
-import { AfterInsert } from 'typeorm'
 
 @Injectable()
 export class UsersService {
