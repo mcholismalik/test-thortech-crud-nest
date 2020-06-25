@@ -23,7 +23,6 @@ export class UsersService {
     return found
   }
 
-  @AfterInsert()
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     const { username, password, telegramUser } = createUserDto
 
