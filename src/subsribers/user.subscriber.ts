@@ -7,31 +7,28 @@ import {
 } from 'typeorm'
 import { User } from 'src/entities/user.entity'
 import { Injectable } from '@nestjs/common'
-import { TelegrafService } from 'src/lib/telegraf/telegraf.service'
+import { UsersService } from 'src/modules/users/users.service'
 
 @Injectable()
 @EventSubscriber()
 export class UserSubscriber implements EntitySubscriberInterface<User> {
   constructor(
     connection: Connection,
-    private readonly telegrafService: TelegrafService,
+    private readonly usersService: UsersService,
   ) {
     connection.subscribers.push(this)
   }
 
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   listenTo() {
     return User
   }
 
   async afterInsert(event: InsertEvent<User>): Promise<void> {
-    console.log(`After inserted `, event.entity)
-    const message = JSON.stringify({ method: 'Insert', payload: event.entity })
-    await this.telegrafService.sendMessage(event.entity.telegramUser, message)
+    await this.usersService.sendMessageTelegraf(event.entity)
   }
 
   async afterUpdate(event: UpdateEvent<User>): Promise<void> {
-    console.log(`After updated `, event.entity)
-    const message = JSON.stringify({ method: 'Update', payload: event.entity })
-    await this.telegrafService.sendMessage(event.entity.telegramUser, message)
+    await this.usersService.sendMessageTelegraf(event.entity)
   }
 }
