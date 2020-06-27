@@ -7,14 +7,14 @@ import {
 } from 'typeorm'
 import { User } from 'src/entities/user.entity'
 import { Injectable } from '@nestjs/common'
-import { UsersService } from 'src/modules/users/users.service'
+import { TelegrafService } from 'src/lib/telegraf/telegraf.service'
 
 @Injectable()
 @EventSubscriber()
 export class UserSubscriber implements EntitySubscriberInterface<User> {
   constructor(
     connection: Connection,
-    private readonly usersService: UsersService,
+    private readonly telegrafService: TelegrafService,
   ) {
     connection.subscribers.push(this)
   }
@@ -25,10 +25,15 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
   }
 
   async afterInsert(event: InsertEvent<User>): Promise<void> {
-    await this.usersService.sendMessageTelegraf(event.entity)
+    await this.sendMessageTelegraf('Insert', event.entity)
   }
 
   async afterUpdate(event: UpdateEvent<User>): Promise<void> {
-    await this.usersService.sendMessageTelegraf(event.entity)
+    await this.sendMessageTelegraf('Update', event.entity)
+  }
+
+  async sendMessageTelegraf(method: string, user: User): Promise<void> {
+    const message = JSON.stringify({ method, payload: user })
+    return await this.telegrafService.sendMessage(user.telegramUser, message)
   }
 }

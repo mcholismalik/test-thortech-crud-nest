@@ -4,13 +4,11 @@ import { UserRepository } from '../../repositories/user.repository'
 import { User } from '../../entities/user.entity'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/udpate-user.dto'
-import { TelegrafService } from 'src/lib/telegraf/telegraf.service'
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(UserRepository) private userRepository: UserRepository,
-    private telegrafService: TelegrafService,
   ) {}
 
   async getUsers(): Promise<User[]> {
@@ -51,10 +49,5 @@ export class UsersService {
     const result = await this.userRepository.delete(id)
     if (result.affected === 0)
       throw new NotFoundException(`User with ID "${id}" not found`)
-  }
-
-  async sendMessageTelegraf(user: User): Promise<void> {
-    const message = JSON.stringify({ method: 'Insert', payload: user })
-    return await this.telegrafService.sendMessage(user.telegramUser, message)
   }
 }
