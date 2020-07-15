@@ -1,6 +1,6 @@
-# CRUD API + Event Subscribe Push Telegraf with NestJS
+# test-thortech-crud-nest
 
-Sample user crud api, & implement event subsriber for push message to telegraf in NestJS
+Thortech coding test, crud with NestJS + TelegramBot
 
 ## Installation
 
