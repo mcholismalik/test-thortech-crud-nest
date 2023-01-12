@@ -27,7 +27,7 @@
     "@nestjs/swagger": "^4.5.11",
     "@nestjs/typeorm": "^7.1.0",
     "class-transformer": "^0.2.3",
-    "class-validator": "^0.12.2",
+    "class-validator": "^0.14.0",
     "nestjs-telegraf": "^1.2.1",
     "node-telegram-bot-api": "^0.50.0",
     "pg": "^8.2.1",
